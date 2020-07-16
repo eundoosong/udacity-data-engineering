@@ -42,7 +42,7 @@ def process_log_file(cur, filepath):
 
     # convert timestamp column to datetime
     ts = pd.to_datetime(df['ts'], unit='ms')
-    
+
     # covert millisecond to second timestamp
     df['ts'] = df['ts'].div(1000).astype(int)
 
@@ -57,11 +57,12 @@ def process_log_file(cur, filepath):
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = df.loc[:, ['userId', 'firstName', 'lastName', 'gender', 'level']]
+    user_df = df.loc[:, ['userId', 'firstName', 'lastName', 'gender', 'level',
+                         'level']]
 
     # insert user records
-    for i, row in user_df.iterrows():
-        cur.execute(user_table_insert, row)
+    for _, row in user_df.iterrows():
+        cur.execute(user_table_insert, list(row))
 
     # insert songplay records
     for index, row in df.iterrows():
@@ -70,13 +71,11 @@ def process_log_file(cur, filepath):
         results = cur.fetchone()
         if results:
             songid, artistid = results
-        else:
-            songid, artistid = None, None
-
-        # insert songplay record
-        songplay_data = (index, row.ts, row.userId, row.level, songid,
-                         artistid, row.sessionId, row.location, row.userAgent)
-        cur.execute(songplay_table_insert, songplay_data)
+            # insert songplay record
+            songplay_data = (row.ts, row.userId, row.level, songid,
+                             artistid, row.sessionId, row.location,
+                             row.userAgent)
+            cur.execute(songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
