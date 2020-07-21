@@ -10,10 +10,12 @@ time_table_drop = "drop table if exists time;"
 
 songplay_table_create = ("""
 create table songplays
-    (songplay_id serial primary key, start_time int NOT NULL,
-    user_id varchar NOT NULL, level varchar, song_id varchar NOT NULL,
-    artist_id varchar NOT NULL, session_id varchar, location varchar,
-    user_agent varchar);
+    (songplay_id serial primary key,
+    start_time int REFERENCES time(start_time) NOT NULL,
+    user_id varchar REFERENCES users(user_id) NOT NULL, level varchar,
+    song_id varchar REFERENCES songs(song_id) NOT NULL,
+    artist_id varchar REFERENCES artists(artist_id) NOT NULL,
+    session_id varchar, location varchar, user_agent varchar);
 """)
 
 user_table_create = ("""
@@ -80,9 +82,9 @@ select (songs.song_id, songs.artist_id) from songs join artists on
 
 # QUERY LISTS
 
-create_table_queries = [songplay_table_create, user_table_create,
+create_table_queries = [user_table_create,
                         song_table_create, artist_table_create,
-                        time_table_create]
+                        time_table_create, songplay_table_create]
 drop_table_queries = [songplay_table_drop, user_table_drop,
                       song_table_drop, artist_table_drop,
                       time_table_drop]
