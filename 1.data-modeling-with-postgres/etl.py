@@ -3,9 +3,13 @@ import glob
 import psycopg2
 import pandas as pd
 import numpy as np
+import logging
 from sql_queries import songplay_table_insert, artist_table_insert, \
                 song_table_insert, time_table_insert, song_select, \
                 user_table_insert
+
+
+logger = logging.getLogger(__name__)
 
 
 def process_song_file(cur, filepath):
@@ -95,14 +99,14 @@ def process_data(cur, conn, filepath, func):
 
     # get total number of files found
     num_files = len(all_files)
-    print('{} files found in {}'.format(num_files, filepath))
+    logger.info('{} files found in {}'.format(num_files, filepath))
 
     # iterate over files and process
     for i, datafile in enumerate(all_files, 1):
-        print(datafile)
+        logger.info(datafile)
         func(cur, datafile)
         conn.commit()
-        print('{}/{} files processed.'.format(i, num_files))
+        logger.info('{}/{} files processed.'.format(i, num_files))
 
 
 def main():
