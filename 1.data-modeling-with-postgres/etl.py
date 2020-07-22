@@ -8,7 +8,8 @@ from sql_queries import songplay_table_insert, artist_table_insert, \
                 song_table_insert, time_table_insert, song_select, \
                 user_table_insert
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=os.getenv('DEBUG_LEVEL', 'INFO'))
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',
+                    level=os.getenv('DEBUG_LEVEL', 'INFO'))
 
 
 def process_song_file(cur, filepath):

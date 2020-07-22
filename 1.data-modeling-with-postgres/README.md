@@ -8,13 +8,13 @@ Each python file represents:
 
 ## Brief schema design
 - There are 5 tables defined as star schema.
-- [songplays tables](sql_queries.py#L12-L16)
+- [songplays tables](sql_queries.py#L12-L18)
   - fact table that contains log data associated with song plays
 - users, songs, artists, time: all are dimension tables and associated with songplays table(fact table) using reference id
-  - [users](sql_queries.py#L20-L22): users in the app
-  - [songs](sql_queries.py#L26-L28): songs in music database
-  - [artists](sql_queries.py#L32-L34): artists in music database
-  - [time](sql_queries.py#L38-L40): timestamps of records in songplays broken down into specific units
+  - [users](sql_queries.py#L22-L24): users in the app
+  - [songs](sql_queries.py#L28-L30): songs in music database
+  - [artists](sql_queries.py#L34-L36): artists in music database
+  - [time](sql_queries.py#L40-L42): timestamps of records in songplays broken down into specific units
 
 ## Prerequistes 
 - Postgres
