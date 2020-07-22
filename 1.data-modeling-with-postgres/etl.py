@@ -8,8 +8,7 @@ from sql_queries import songplay_table_insert, artist_table_insert, \
                 song_table_insert, time_table_insert, song_select, \
                 user_table_insert
 
-
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=os.getenv('DEBUG_LEVEL', 'INFO'))
 
 
 def process_song_file(cur, filepath):
@@ -99,14 +98,14 @@ def process_data(cur, conn, filepath, func):
 
     # get total number of files found
     num_files = len(all_files)
-    logger.info('{} files found in {}'.format(num_files, filepath))
+    logging.info('{} files found in {}'.format(num_files, filepath))
 
     # iterate over files and process
     for i, datafile in enumerate(all_files, 1):
-        logger.info(datafile)
+        logging.info(datafile)
         func(cur, datafile)
         conn.commit()
-        logger.info('{}/{} files processed.'.format(i, num_files))
+        logging.info('{}/{} files processed.'.format(i, num_files))
 
 
 def main():
