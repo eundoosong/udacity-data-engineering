@@ -92,6 +92,7 @@ def main():
     args = parser.parse_args()
     spark = create_spark_session()
 
+    # TODO: should give song and log input path respectively as argument.
     process_song_data(spark, args.input+"/song_data/*/*/*/*", args.output)
     process_log_data(spark, args.input+"/log_data/2018/11/", args.output)
 
