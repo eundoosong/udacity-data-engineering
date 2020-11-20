@@ -11,7 +11,7 @@ class StageToRedshiftOperator(BaseOperator):
             FROM '{}'
             ACCESS_KEY_ID '{}'
             SECRET_ACCESS_KEY '{}'
-            format as json {}
+            json 'auto'
             """
 
     @apply_defaults

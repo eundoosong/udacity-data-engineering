@@ -1,8 +1,8 @@
 class SqlQueries:
-    songplay_table_insert = ("""
-        INSERT INTO songplay (
+    songplays_table_insert = ("""
+        INSERT INTO songplays (
             SELECT
-                    md5(events.sessionid || events.start_time) songplay_id,
+                    md5(events.start_time) songplay_id,
                     events.start_time, 
                     events.userid, 
                     events.level, 
@@ -21,23 +21,23 @@ class SqlQueries:
         )
     """)
 
-    user_table_insert = ("""
-        INSERT INTO user (
+    users_table_insert = ("""
+        INSERT INTO users (
             SELECT distinct userid, firstname, lastname, gender, level
             FROM staging_events
             WHERE page='NextSong'
         )
     """)
 
-    song_table_insert = ("""
-        INSERT INTO song (
+    songs_table_insert = ("""
+        INSERT INTO songs (
             SELECT distinct song_id, title, artist_id, year, duration
             FROM staging_songs
         )
     """)
 
-    artist_table_insert = ("""
-        INSERT INTO artist (
+    artists_table_insert = ("""
+        INSERT INTO artists (
             SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
             FROM staging_songs
         )

@@ -1,13 +1,10 @@
 from datetime import datetime, timedelta
-import os
 from airflow import DAG
-from plugins.operators.dummy_operator import DummyOperator
+from airflow.operators.dummy_operator import DummyOperator
 from plugins.operators import (StageToRedshiftOperator, LoadFactOperator,
                                LoadDimensionOperator, DataQualityOperator)
 from plugins.helpers import SqlQueries
 
-# AWS_KEY = os.environ.get('AWS_KEY')
-# AWS_SECRET = os.environ.get('AWS_SECRET')
 
 default_args = {
     'owner': 'udacity',
@@ -29,7 +26,7 @@ stage_events_to_redshift = StageToRedshiftOperator(
     email_on_retry=False,
     retries=3,
     retry_delay=timedelta(minutes=5),
-    aws_credentials_id="aws_conn_id",
+    aws_credentials_id="aws_credentials",
     redshift_conn_id="redshift_conn_id",
     s3_bucket="udacity-dend",
     s3_key="log_data",
@@ -42,7 +39,7 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     email_on_retry=False,
     retries=3,
     retry_delay=timedelta(minutes=5),
-    aws_credentials_id="aws_conn_id",
+    aws_credentials_id="aws_credentials",
     redshift_conn_id="redshift_conn_id",
     s3_bucket="udacity-dend",
     s3_key="log_data",
@@ -56,7 +53,7 @@ load_songplays_table = LoadFactOperator(
     retries=3,
     retry_delay=timedelta(minutes=5),
     redshift_conn_id="redshift_conn_id",
-    load_sql=SqlQueries.songplay_table_insert
+    load_sql=SqlQueries.songplays_table_insert
 )
 
 load_user_dimension_table = LoadDimensionOperator(
@@ -66,7 +63,7 @@ load_user_dimension_table = LoadDimensionOperator(
     retries=3,
     retry_delay=timedelta(minutes=5),
     redshift_conn_id="redshift_conn_id",
-    load_sql=SqlQueries.user_table_insert
+    load_sql=SqlQueries.users_table_insert
 )
 
 load_song_dimension_table = LoadDimensionOperator(
@@ -76,7 +73,7 @@ load_song_dimension_table = LoadDimensionOperator(
     retries=3,
     retry_delay=timedelta(minutes=5),
     redshift_conn_id="redshift_conn_id",
-    load_sql=SqlQueries.song_table_insert
+    load_sql=SqlQueries.songs_table_insert
 )
 
 load_artist_dimension_table = LoadDimensionOperator(
@@ -86,7 +83,7 @@ load_artist_dimension_table = LoadDimensionOperator(
     retries=3,
     retry_delay=timedelta(minutes=5),
     redshift_conn_id="redshift_conn_id",
-    load_sql=SqlQueries.artist_table_insert
+    load_sql=SqlQueries.artists_table_insert
 )
 
 load_time_dimension_table = LoadDimensionOperator(
