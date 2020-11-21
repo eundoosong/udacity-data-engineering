@@ -3,13 +3,13 @@ class SqlQueries:
         INSERT INTO songplays (
             SELECT
                     md5(events.start_time) songplay_id,
-                    events.start_time, 
-                    events.userid, 
-                    events.level, 
-                    songs.song_id, 
-                    songs.artist_id, 
-                    events.sessionid, 
-                    events.location, 
+                    events.start_time,
+                    events.userid,
+                    events.level,
+                    songs.song_id,
+                    songs.artist_id,
+                    events.sessionid,
+                    events.location,
                     events.useragent
                     FROM (SELECT TIMESTAMP 'epoch' + ts/1000 * interval '1 second' AS start_time, *
                 FROM staging_events
@@ -38,15 +38,16 @@ class SqlQueries:
 
     artists_table_insert = ("""
         INSERT INTO artists (
-            SELECT distinct artist_id, artist_name, artist_location, artist_latitude, artist_longitude
-            FROM staging_songs
+            SELECT distinct artist_id, artist_name, artist_location, artist_latitude,
+            artist_longitude FROM staging_songs
         )
     """)
 
     time_table_insert = ("""
         INSERT INTO time (
-            SELECT start_time, extract(hour from start_time), extract(day from start_time), extract(week from start_time), 
-                   extract(month from start_time), extract(year from start_time), extract(dayofweek from start_time)
+            SELECT start_time, extract(hour from start_time), extract(day from start_time),
+                extract(week from start_time), extract(month from start_time),
+                extract(year from start_time), extract(dayofweek from start_time)
             FROM songplays
         )
     """)

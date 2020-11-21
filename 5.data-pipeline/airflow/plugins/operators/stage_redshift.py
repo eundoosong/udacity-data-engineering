@@ -40,7 +40,8 @@ class StageToRedshiftOperator(BaseOperator):
         }
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
-        redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id, **keepalive_kwargs)
+        redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id,
+                                **keepalive_kwargs)
 
         self.log.info("Clearing data from destination Redshift table")
         redshift.run(f"DELETE FROM {self.target_table}")
@@ -54,8 +55,3 @@ class StageToRedshiftOperator(BaseOperator):
             self.json_option,
         )
         redshift.run(formatted_sql)
-
-
-
-
-

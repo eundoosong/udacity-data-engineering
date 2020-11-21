@@ -18,9 +18,11 @@ class DataQualityOperator(BaseOperator):
 
     def execute(self, context):
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
-        records = redshift.get_records("select count(*) from songs where songid = ''")
+        records = redshift.get_records(
+            "select count(*) from songs where songid = ''")
         if len(records) > 0:
             logging.warning("empty song id found in songs table")
-        records = redshift.get_records("select count(*) from artists where artistid = ''")
+        records = redshift.get_records(
+            "select count(*) from artists where artistid = ''")
         if len(records) > 0:
             logging.warning("empty artist id found in artists table")
