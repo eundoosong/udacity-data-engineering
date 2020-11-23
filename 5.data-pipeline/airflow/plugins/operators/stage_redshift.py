@@ -1,10 +1,10 @@
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.contrib.hooks.aws_hook import AwsHook
-from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
+from .common_operator import CommonOperator
 
 
-class StageToRedshiftOperator(BaseOperator):
+class StageToRedshiftOperator(CommonOperator):
     ui_color = '#358140'
     copy_sql = """
             COPY {}
@@ -31,7 +31,7 @@ class StageToRedshiftOperator(BaseOperator):
         self.target_table = target_table
         self.json_option = json_option
 
-    def execute(self, context):
+    def _execute(self, context):
         keepalive_kwargs = {
             "keepalives": 1,
             "keepalives_idle": 30,
