@@ -4,6 +4,9 @@ from airflow.utils.decorators import apply_defaults
 
 
 class CommonOperator(BaseOperator):
+    """
+    Common operator provides common parameter
+    """
     @apply_defaults
     def __init__(self, *args, **kwargs):
         super(CommonOperator, self).__init__(

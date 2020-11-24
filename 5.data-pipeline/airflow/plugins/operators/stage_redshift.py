@@ -5,6 +5,9 @@ from .common_operator import CommonOperator
 
 
 class StageToRedshiftOperator(CommonOperator):
+    """
+    Load data from s3 to target table
+    """
     ui_color = '#358140'
     copy_sql = """
             COPY {}
@@ -16,14 +19,23 @@ class StageToRedshiftOperator(CommonOperator):
 
     @apply_defaults
     def __init__(self,
-                 aws_credentials_id="",
-                 redshift_conn_id="",
-                 s3_bucket="",
-                 s3_key="",
-                 target_table="",
+                 aws_credentials_id,
+                 redshift_conn_id,
+                 s3_bucket,
+                 s3_key,
+                 target_table,
                  json_option="auto",
                  *args, **kwargs):
-
+        """
+        :param aws_credentials_id: aws credentials id set by
+                admin connections
+        :param redshift_conn_id: redshift connection id
+                set by admin connections
+        :param s3_bucket: s3 bucket to load from
+        :param s3_key: s3 object key to load from
+        :param target_table: target table to copy to
+        :param json_option: json option in redshift copy (default: auto)
+        """
         super(StageToRedshiftOperator, self).__init__(*args, **kwargs)
         self.aws_credentials_id = aws_credentials_id
         self.redshift_conn_id = redshift_conn_id

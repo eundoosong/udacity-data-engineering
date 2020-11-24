@@ -4,7 +4,9 @@ from .common_operator import CommonOperator
 
 
 class LoadOperator(CommonOperator):
-
+    """
+    Load data into target table
+    """
     ui_color = '#F98866'
 
     @apply_defaults
@@ -13,6 +15,14 @@ class LoadOperator(CommonOperator):
                  redshift_conn_id,
                  truncate_insert=False,
                  *args, **kwargs):
+        """
+        :param sql_load_query: sql load query tuple
+                that consists of 'target table' and 'sql query'
+        :param redshift_conn_id: redshift connection id
+                set by admin connections
+        :param truncate_insert: flag if table is deleted before load
+                (default: False)
+        """
         super(LoadOperator, self).__init__(*args, **kwargs)
         self.redshift_conn_id = redshift_conn_id
         self.target_table = sql_load_query[0]
