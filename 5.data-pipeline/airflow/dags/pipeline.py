@@ -1,22 +1,26 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from plugins.operators import (StageToRedshiftOperator,
                                LoadOperator, DataQualityOperator)
 from plugins.helpers import SqlQueries
 
-redshift_conn_id = "redshift_conn_id"
-aws_credentials_id = "aws_credentials"
+redshift_conn_id = 'redshift_conn_id'
+aws_credentials_id = 'aws_credentials'
 default_args = {
     'owner': 'udacity',
+    'depends_on_past': False,
+    'email_on_retry': False,
+    'retries': 3,
+    'retry_delay': timedelta(minutes=5),
     'start_date': datetime(2019, 1, 12),
+    'catchup': False,
 }
 
-with DAG('udac_example_dag',
+with DAG('udacity_pipeline',
          default_args=default_args,
          description='Load and transform data in Redshift with Airflow',
          schedule_interval='0 * * * *',
-         catchup=False
          ) as dag:
     start_operator = DummyOperator(task_id='Begin_execution', dag=dag)
 

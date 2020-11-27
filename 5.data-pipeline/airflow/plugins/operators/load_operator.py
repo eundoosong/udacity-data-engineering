@@ -1,9 +1,9 @@
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.utils.decorators import apply_defaults
-from .common_operator import CommonOperator
+from airflow.models import BaseOperator
 
 
-class LoadOperator(CommonOperator):
+class LoadOperator(BaseOperator):
     """
     Load data into target table
     """

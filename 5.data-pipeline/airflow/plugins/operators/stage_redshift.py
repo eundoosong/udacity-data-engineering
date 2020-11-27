@@ -1,10 +1,10 @@
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.contrib.hooks.aws_hook import AwsHook
 from airflow.utils.decorators import apply_defaults
-from .common_operator import CommonOperator
+from airflow.models import BaseOperator
 
 
-class StageToRedshiftOperator(CommonOperator):
+class StageToRedshiftOperator(BaseOperator):
     """
     Load data from s3 to target table
     """
