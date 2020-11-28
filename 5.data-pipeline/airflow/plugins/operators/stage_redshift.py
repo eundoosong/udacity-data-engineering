@@ -8,13 +8,14 @@ class StageToRedshiftOperator(BaseOperator):
     """
     Load data from s3 to target table
     """
+    template_fields = ('s3_key',)
     ui_color = '#358140'
     copy_sql = """
             COPY {}
             FROM '{}'
             ACCESS_KEY_ID '{}'
             SECRET_ACCESS_KEY '{}'
-            json as '{}'
+            {}
             """
 
     @apply_defaults
@@ -24,7 +25,8 @@ class StageToRedshiftOperator(BaseOperator):
                  s3_bucket,
                  s3_key,
                  target_table,
-                 json_option="auto",
+                 file_format="json",
+                 json_path="auto",
                  *args, **kwargs):
         """
         :param aws_credentials_id: aws credentials id set by
@@ -41,19 +43,17 @@ class StageToRedshiftOperator(BaseOperator):
         self.redshift_conn_id = redshift_conn_id
         self.s3_path = f"s3://{s3_bucket}/{s3_key}"
         self.target_table = target_table
-        self.json_option = json_option
+        self.file_format = file_format
+        self.json_path = json_path
 
-    def _execute(self, context):
-        keepalive_kwargs = {
-            "keepalives": 1,
-            "keepalives_idle": 30,
-            "keepalives_interval": 5,
-            "keepalives_count": 5,
-        }
+    def execute(self, context):
+        if not (self.file_format == "csv" or self.file_format == "json"):
+            raise ValueError(f"file format {self.file_format} is not csv or json")
+        file_format_option = f"format json '{self.json_path}'" if self.file_format == "json" \
+            else "format CSV"
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
-        redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id,
-                                **keepalive_kwargs)
+        redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
         self.log.info("Clearing data from destination Redshift table")
         redshift.run(f"DELETE FROM {self.target_table}")
@@ -64,6 +64,7 @@ class StageToRedshiftOperator(BaseOperator):
             self.s3_path,
             credentials.access_key,
             credentials.secret_key,
-            self.json_option,
+            file_format_option,
         )
         redshift.run(formatted_sql)
+        self.log.info(f"{self.target_table} loaded..")
