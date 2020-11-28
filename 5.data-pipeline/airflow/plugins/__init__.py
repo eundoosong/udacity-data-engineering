@@ -11,7 +11,8 @@ class UdacityPlugin(AirflowPlugin):
     name = "udacity_plugin"
     operators = [
         operators.StageToRedshiftOperator,
-        operators.LoadOperator,
+        operators.LoadFactOperator,
+        operators.LoadDimensionOperator,
         operators.DataQualityOperator
     ]
     helpers = [
