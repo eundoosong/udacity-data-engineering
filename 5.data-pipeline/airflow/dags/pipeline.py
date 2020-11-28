@@ -24,7 +24,7 @@ dag = DAG('udacity_pipeline',
           )
 
 with dag:
-    start_operator = DummyOperator(task_id='Begin_execution', dag=dag)
+    start_operator = DummyOperator(task_id='Begin_execution')
 
     stage_events_to_redshift = StageToRedshiftOperator(
         task_id='Stage_events',
@@ -85,6 +85,13 @@ with dag:
     run_quality_checks = DataQualityOperator(
         task_id='Run_data_quality_checks',
         redshift_conn_id=redshift_conn_id,
+        target_table_columns={
+            "songplays": ["playid", "start_time"],
+            "users": ["userid"],
+            "songs": ["songid"],
+            "artists": ["artistid"],
+            "time": ["start_time"],
+        }
     )
 
     end_operator = DummyOperator(task_id='Stop_execution')
