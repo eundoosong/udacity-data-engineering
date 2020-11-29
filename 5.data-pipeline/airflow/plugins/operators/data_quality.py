@@ -17,8 +17,8 @@ class DataQualityOperator(BaseOperator):
         """
         :param redshift_conn_id: redshift connection id set by admin connections
         :param target_table_columns: dict type for tables to be checked for data quality,
-                                     that contains a table as key and columns as value in list
-                                     for empty and null check.
+                                     that contains a table as key and columns as value in list for
+                                     null check.
                                      for example,
                                      target_table_columns = { "my_table": ["column1", "column2"] }
         """
