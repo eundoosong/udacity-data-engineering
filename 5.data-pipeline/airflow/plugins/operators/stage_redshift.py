@@ -48,19 +48,19 @@ class StageToRedshiftOperator(BaseOperator):
         self.json_path = json_path
 
     def execute(self, context):
-        if not (self.file_format == "csv" or self.file_format == "json"):
-            raise ValueError(f"file format {self.file_format} is not csv or json")
-        file_format_option = f"format json '{self.json_path}'" if self.file_format == "json" \
-            else "format CSV"
+        if not (self.file_format == 'csv' or self.file_format == 'json'):
+            raise ValueError(f'file format {self.file_format} is not csv or json')
+        file_format_option = f"format json '{self.json_path}'" if self.file_format == 'json' \
+            else 'format CSV'
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
-        self.log.info("Clearing data from destination Redshift table")
-        redshift.run(f"DELETE FROM {self.target_table}")
+        self.log.info('Clearing data from destination Redshift table')
+        redshift.run(f'DELETE FROM {self.target_table}')
 
-        self.log.info("Copying data from S3 to Redshift")
-        s3_path = f"s3://{self.s3_bucket}/{self.s3_key}"
+        self.log.info('Copying data from S3 to Redshift')
+        s3_path = f's3://{self.s3_bucket}/{self.s3_key}'
         formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.target_table,
             s3_path,
@@ -69,4 +69,4 @@ class StageToRedshiftOperator(BaseOperator):
             file_format_option,
         )
         redshift.run(formatted_sql)
-        self.log.info(f"{self.target_table} loaded..")
+        self.log.info(f'{self.target_table} loaded..')

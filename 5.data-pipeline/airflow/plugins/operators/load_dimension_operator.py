@@ -30,11 +30,11 @@ class LoadDimensionOperator(BaseOperator):
 
     def execute(self, context):
         mode = self.mode.lower()
-        if mode != "truncate" and mode != "insert":
-            raise ValueError("invalid mode (truncate and insert only support)")
+        if mode != 'truncate' and mode != 'insert':
+            raise ValueError('invalid mode (truncate and insert only support)')
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
-        if mode == "truncate":
-            self.log.info(f"Clearing data from target {self.target_table} table")
-            redshift.run(f"TRUNCATE {self.target_table}")
+        if mode == 'truncate':
+            self.log.info(f'Clearing data from target {self.target_table} table')
+            redshift.run(f'TRUNCATE {self.target_table}')
         redshift.run(self.load_sql)
-        self.log.info(f"dimension table({self.target_table}) loaded..")
+        self.log.info(f'dimension table({self.target_table}) loaded..')

@@ -8,7 +8,7 @@ from . import helpers
 
 # Defining the plugin class
 class UdacityPlugin(AirflowPlugin):
-    name = "udacity_plugin"
+    name = 'udacity_plugin'
     operators = [
         operators.StageToRedshiftOperator,
         operators.LoadFactOperator,

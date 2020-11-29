@@ -31,22 +31,22 @@ with dag:
         task_id='Stage_events',
         aws_credentials_id=aws_credentials_id,
         redshift_conn_id=redshift_conn_id,
-        s3_bucket="udacity-dend",
-        s3_key="log_data",
-        target_table="staging_events",
-        file_format="json",
-        json_path="s3://udacity-dend/log_json_path.json"
+        s3_bucket='udacity-dend',
+        s3_key='log_data',
+        target_table='staging_events',
+        file_format='json',
+        json_path='s3://udacity-dend/log_json_path.json'
     )
 
     stage_songs_to_redshift = StageToRedshiftOperator(
         task_id='Stage_songs',
         aws_credentials_id=aws_credentials_id,
         redshift_conn_id=redshift_conn_id,
-        s3_bucket="udacity-dend",
-        s3_key="song_data",
-        target_table="staging_songs",
-        file_format="json",
-        json_path="auto"
+        s3_bucket='udacity-dend',
+        s3_key='song_data',
+        target_table='staging_songs',
+        file_format='json',
+        json_path='auto'
     )
 
     load_songplays_fact_table = LoadFactOperator(
@@ -59,39 +59,39 @@ with dag:
         task_id='Load_user_dim_table',
         redshift_conn_id=redshift_conn_id,
         sql_load_query=SqlQueries.users_table_insert,
-        mode="truncate",
+        mode='truncate',
     )
 
     load_song_dimension_table = LoadDimensionOperator(
         task_id='Load_song_dim_table',
         redshift_conn_id=redshift_conn_id,
         sql_load_query=SqlQueries.songs_table_insert,
-        mode="truncate",
+        mode='truncate',
     )
 
     load_artist_dimension_table = LoadDimensionOperator(
         task_id='Load_artist_dim_table',
         redshift_conn_id=redshift_conn_id,
         sql_load_query=SqlQueries.artists_table_insert,
-        mode="truncate",
+        mode='truncate',
     )
 
     load_time_dimension_table = LoadDimensionOperator(
         task_id='Load_time_dim_table',
         redshift_conn_id=redshift_conn_id,
         sql_load_query=SqlQueries.time_table_insert,
-        mode="truncate",
+        mode='truncate',
     )
 
     run_quality_checks = DataQualityOperator(
         task_id='Run_data_quality_checks',
         redshift_conn_id=redshift_conn_id,
         target_table_columns={
-            "songplays": ["userid"],
-            "users": ["first_name", "last_name", "level"],
-            "songs": ["title", "artistid"],
-            "artists": ["name"],
-            "time": [],
+            'songplays': ['userid'],
+            'users': ['first_name', 'last_name', 'level'],
+            'songs': ['title', 'artistid'],
+            'artists': ['name'],
+            'time': [],
         }
     )
 
