@@ -86,11 +86,11 @@ with dag:
         task_id='Run_data_quality_checks',
         redshift_conn_id=redshift_conn_id,
         target_table_columns={
-            "songplays": ["playid", "start_time"],
-            "users": ["userid"],
-            "songs": ["songid"],
-            "artists": ["artistid"],
-            "time": ["start_time"],
+            "songplays": ["userid"],
+            "users": ["first_name", "last_name", "level"],
+            "songs": ["title", "artistid"],
+            "artists": ["name"],
+            "time": [],
         }
     )
 
