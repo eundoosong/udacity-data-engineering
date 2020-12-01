@@ -26,7 +26,7 @@ class StageToRedshiftOperator(BaseOperator):
                  s3_key,
                  target_table,
                  file_format="json",
-                 json_path="auto",
+                 file_path="auto",
                  *args, **kwargs):
         """
         :param aws_credentials_id: aws credentials id set by
@@ -36,7 +36,10 @@ class StageToRedshiftOperator(BaseOperator):
         :param s3_bucket: s3 bucket to load from
         :param s3_key: s3 object key to load from
         :param target_table: target table to copy to
-        :param json_option: json option in redshift copy (default: auto)
+        :param file_format: the format of data file in s3, support only json and csv
+                            (default: json)
+        :param file_path: file path to be loaded from s3 (default: auto)
+                        also see, file_format
         """
         super(StageToRedshiftOperator, self).__init__(*args, **kwargs)
         self.aws_credentials_id = aws_credentials_id
@@ -45,12 +48,12 @@ class StageToRedshiftOperator(BaseOperator):
         self.s3_key = s3_key
         self.target_table = target_table
         self.file_format = file_format
-        self.json_path = json_path
+        self.file_path = file_path
 
     def execute(self, context):
         if not (self.file_format == 'csv' or self.file_format == 'json'):
             raise ValueError(f'file format {self.file_format} is not csv or json')
-        file_format_option = f"format json '{self.json_path}'" if self.file_format == 'json' \
+        file_format_option = f"format json '{self.file_path}'" if self.file_format == 'json' \
             else 'format CSV'
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
